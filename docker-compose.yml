@@ -1,0 +1,16 @@
+version: '3'
+services:
+  relayer:
+    build: .
+    env_file:
+      - ./heiswap.env
+    expose:
+      - "3000"
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - relayer
+    ports:
+      - 8000:8000
