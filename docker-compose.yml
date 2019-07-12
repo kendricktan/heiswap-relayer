@@ -14,8 +14,9 @@ services:
       - 443:443
     volumes:
       - ssl_data:/etc/resty-auto-ssl
-    env_file:
-      - ./heiswap.env
+    environment:
+      ALLOWED_DOMAINS: 'heiswap.exchange'
+      SITES: '*.heiswap.exchange=relayer:3000'
 
 volumes:
   ssl_data:

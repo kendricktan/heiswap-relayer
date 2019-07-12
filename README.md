@@ -28,11 +28,16 @@ cd heiswap-relayer
 ```
 INFURA_PROJECT_ID='project-id'
 ETH_SK='ethereum-secret-key'
-ALLOWED_DOMAINS=heiswap.exchange
-SITES='*.heiswap.exchange=relayer:3000'
 ```
 
-3. Choose deployment method
+3. Edit `docker-compose.yml` and edit the environment variable to suit your site
+```
+environment:
+    ALLOWED_DOMAINS: 'yourdomain.com'
+    SITES: '*.yourdomain.com=yourapp:3000'
+```
+
+4. Choose deployment method
 
 ## Load balancer + multiple relayers
 ```bash
@@ -40,7 +45,7 @@ SITES='*.heiswap.exchange=relayer:3000'
 docker-compose up --build --scale relayer=2 -d
 ```
 
-## Single relayer
+## Single relayer (no-ssl and on port 3000)
 ```
 docker build -t heiswap-relayer .
 docker run -e INFURA_PROJECT_ID=<> -e ETH_SK=<> heiswap-relayer
