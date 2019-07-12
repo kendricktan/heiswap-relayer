@@ -37,7 +37,7 @@ SITES='*.heiswap.exchange=relayer:3000'
 ## Load balancer + multiple relayers
 ```bash
 # Change  relayer=2 to how many instances you want to run
-docker-compose up --build --scale relayer=2
+docker-compose up --build --scale relayer=2 -d
 ```
 
 ## Single relayer
