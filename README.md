@@ -18,11 +18,21 @@ sudo chmod +x /usr/local/bin/docker-compose
 ```
 
 # Running the relayer
-Make a file called `heiswap.env` in the root folder and make sure it follows the following structure:
+1. Clone the project and cd into it's root directory
 ```
-INFURA_PROJECT_ID=<project id>
-ETH_SK=<private key>
+git clone git@github.com:kendricktan/heiswap-relayer.git
+cd heiswap-relayer
 ```
+
+2. Make a file called `heiswap.env` in the root folder and make sure it follows the following structure:
+```
+INFURA_PROJECT_ID='project-id'
+ETH_SK='ethereum-secret-key'
+ALLOWED_DOMAINS=heiswap.exchange
+SITES='*.heiswap.exchange=relayer:3000'
+```
+
+3. Choose deployment method
 
 ## Load balancer + multiple relayers
 ```bash
