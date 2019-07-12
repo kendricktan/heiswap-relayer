@@ -8,6 +8,7 @@ const heiswapArtifact = require('./contracts/Heiswap.json');
 
 // REST API
 const express = require('express');
+const cors = require('cors');
 const asyncHandler = require('express-async-handler');
 const bodyParser = require('body-parser');
 const app = express();
@@ -37,6 +38,7 @@ const web3 = new Web3(customProvider);
 
 // Middlewares
 app.use(bodyParser.json());
+app.use(cors());
 
 // Relayer logic
 app.post('/', asyncHandler(async (req, res) => {
