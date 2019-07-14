@@ -60,11 +60,12 @@ app.post('/', asyncHandler(async (req, res) => {
     || keyImage === undefined
     || s === undefined
   ) {
-    res.send({
-      errorMessage: 'Invalid payload',
-      txHash: null
-    });
-    res.status(400).end();
+    res
+      .status(400)
+      .send({
+        errorMessage: 'Invalid payload',
+        txHash: null
+      });
     return;
   }
 
@@ -88,11 +89,12 @@ app.post('/', asyncHandler(async (req, res) => {
       ).encodeABI();
   } catch (e) {
     console.log(`Invalid payload: ${JSON.stringify(postParams)}`);
-    res.send({
-      errorMessage: 'Payload invalid format',
-      txHash: null
-    });
-    res.status(400).end();
+    res
+      .status(400)
+      .send({
+        errorMessage: 'Payload invalid format',
+        txHash: null
+      });
     return;
   }
 
@@ -106,11 +108,11 @@ app.post('/', asyncHandler(async (req, res) => {
     });
   } catch (e) {
     console.log(`EVM revert: ${JSON.stringify(postParams)}`);
-    res.send({
-      errorMessage: 'EVM revert on GAS estimation (likely invalid input params).',
-      txHash: null
-    });
-    res.status(400).end();
+    res.status(400)
+      .send({
+        errorMessage: 'EVM revert on GAS estimation (likely invalid input params).',
+        txHash: null
+      });
     return;
   }
 
@@ -142,18 +144,20 @@ app.post('/', asyncHandler(async (req, res) => {
   console.log('Sending tx...');
   try {
     const txR = await web3.eth.sendTransaction(tx);
-    res.statusCode(200);
-    res.send({
-      txHash: txR.transactionHash
-    });
+    res
+      .status(200)
+      .send({
+        txHash: txR.transactionHash
+      });
   } catch (e) {
     const txR = JSON.parse(e.message.split(':').slice(1).join(':'));
 
-    res.statusCode(200);
-    res.send({
-      errorMessage: e.message.split(':').slice(0, 1),
-      txHash: txR.transactionHash
-    });
+    res
+      .status(200)
+      .send({
+        errorMessage: e.message.split(':').slice(0, 1),
+        txHash: txR.transactionHash
+      });
   }
   console.log('Tx sent...');
 }));
