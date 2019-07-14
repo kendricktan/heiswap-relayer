@@ -3,8 +3,9 @@ services:
   relayer:
     build: .
     restart: on-failure
-    env_file:
-      - ./heiswap.env
+    environment:
+      INFURA_PROJECT_ID: ''
+      ETH_SK: ''
     expose:
       - "3000"
   nginx:

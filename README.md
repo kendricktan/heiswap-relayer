@@ -24,20 +24,16 @@ git clone git@github.com:kendricktan/heiswap-relayer.git
 cd heiswap-relayer
 ```
 
-2. Make a file called `heiswap.env` in the root folder and make sure it follows the following structure:
+2. Edit `docker-compose.yml` and edit the following environment variables to suit your site
 ```
 INFURA_PROJECT_ID='project-id'
 ETH_SK='ethereum-secret-key'
+
+ALLOWED_DOMAINS: 'yourdomain.com'
+SITES: '*.yourdomain.com=yourapp:3000'
 ```
 
-3. Edit `docker-compose.yml` and edit the environment variable to suit your site
-```
-environment:
-    ALLOWED_DOMAINS: 'yourdomain.com'
-    SITES: '*.yourdomain.com=yourapp:3000'
-```
-
-4. Choose deployment method
+3. Choose deployment method
 
 ## Load balancer + multiple relayers
 ```bash
