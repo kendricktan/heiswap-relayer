@@ -2,6 +2,7 @@ version: '3'
 services:
   relayer:
     build: .
+    restart: on-failure
     env_file:
       - ./heiswap.env
     expose:
