@@ -44,6 +44,9 @@ app.use(cors());
 app.post('/', asyncHandler(async (req, res) => {
   const postParams = req.body;
 
+  // Debug
+  console.log(`Request received: ${JSON.stringify(postParams)}`);
+
   // Extract out post params
   const {
     receiver, ethAmount, ringIdx, c0, keyImage, s
@@ -84,6 +87,7 @@ app.post('/', asyncHandler(async (req, res) => {
         s
       ).encodeABI();
   } catch (e) {
+    console.log(`Invalid payload: ${JSON.stringify(postParams)}`);
     res.send({
       errorMessage: 'Payload invalid format',
       txHash: null
@@ -101,6 +105,7 @@ app.post('/', asyncHandler(async (req, res) => {
       data: dataBytecode
     });
   } catch (e) {
+    console.log(`EVM revert: ${JSON.stringify(postParams)}`);
     res.send({
       errorMessage: 'EVM revert on GAS estimation (likely invalid input params).',
       txHash: null
@@ -134,6 +139,7 @@ app.post('/', asyncHandler(async (req, res) => {
    */
 
   // Try and send transaction
+  console.log('Sending tx...');
   try {
     const txR = await web3.eth.sendTransaction(tx);
     res.statusCode(200);
@@ -149,6 +155,7 @@ app.post('/', asyncHandler(async (req, res) => {
       txHash: txR.transactionHash
     });
   }
+  console.log('Tx sent...');
 }));
 
 console.log(`Listening on port ${port}`);
