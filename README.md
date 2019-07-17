@@ -25,6 +25,8 @@ cd heiswap-relayer
 ```
 
 2. Edit `docker-compose.yml` and edit the following environment variables to suit your site
+**Note 1:** Make sure the Ethereum address associated with `ETH_SK` has some funds to start with (~0.5 ETH)
+**Note 2:** You'll need to purchase a domain name if you want an SSL connection
 ```
 INFURA_PROJECT_ID='project-id'
 ETH_SK='ethereum-secret-key'
@@ -35,13 +37,13 @@ SITES: '*.yourdomain.com=yourapp:3000'
 
 3. Choose deployment method
 
-## Load balancer + multiple relayers
+## SSL Enabled Load Balancer + multiple relayers
 ```bash
 # Change  relayer=2 to how many instances you want to run
 docker-compose up --build --scale relayer=2 -d
 ```
 
-## Single relayer (no-ssl and on port 3000)
+## Single relayer (runs on port 3000)
 ```
 docker build -t heiswap-relayer .
 docker run -e INFURA_PROJECT_ID=<> -e ETH_SK=<> heiswap-relayer
