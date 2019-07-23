@@ -47,6 +47,9 @@ app.use(cors());
 
 // Relayer logic
 app.post('/', asyncHandler(async (req, res) => {
+  // Set timeout (10 mins max)
+  req.setTimeout(600000);
+
   const postParams = req.body;
 
   // Debug
