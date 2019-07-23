@@ -14,6 +14,11 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
+// ECC
+const BN = require('bn.js');
+const { strTo64BN, bn128 } = require('./utils/AltBn128.js');
+const bnZero = new BN('0', 10);
+
 
 // Check Environment variables
 let hasEnv = true;
@@ -49,11 +54,13 @@ app.post('/', asyncHandler(async (req, res) => {
 
   // Extract out post params
   const {
-    receiver, ethAmount, ringIdx, c0, keyImage, s
+    message, signedMessage, receiver, ethAmount, ringIdx, c0, keyImage, s
   } = postParams;
 
   if (
-    receiver === undefined
+    message === undefined
+    || signedMessage === undefined
+    || receiver === undefined
     || ethAmount === undefined
     || ringIdx === undefined
     || c0 === undefined
@@ -75,6 +82,85 @@ app.post('/', asyncHandler(async (req, res) => {
   const drizzleUtils = await createDrizzleUtils({ web3 });
   const heiswapInstance = await drizzleUtils.getContractInstance({ artifact: heiswapArtifact });
 
+  // Make sure sender authorized this tx
+  const signatureAddress = await web3.eth.personal.ecRecover(message, signedMessage);
+
+  if (
+    signatureAddress.toLowerCase() !== receiver.toLowerCase()
+    || message.toLowerCase().indexOf(receiver.toLowerCase()) === -1
+  ) {
+    res
+      .status(400)
+      .send({
+        errorMessage: 'Invalid Message Signature',
+        txHash: null
+      });
+    return;
+  }
+
+  // Verify signature before sending it of to the EVM
+  // (saves GAS if invalid tx that way)
+  // Checks if ring is closed
+  const ringHash = await heiswapInstance
+    .methods
+    .getRingHash(ethAmount, ringIdx)
+    .call();
+
+  const ringHashBuf = Buffer.from(
+    ringHash.slice(2), // Remove the '0x'
+    'hex'
+  );
+  const ethAddressBuf = Buffer.from(
+    receiver.slice(2), // Remove the '0x'
+    'hex'
+  );
+  const msgBuf = Buffer.concat([
+    ringHashBuf,
+    ethAddressBuf
+  ]);
+
+  const publicKeys = await heiswapInstance
+    .methods
+    .getPublicKeys(ethAmount, ringIdx)
+    .call();
+
+  const publicKeysBN = publicKeys
+    .map(x => {
+      return [
+        // Slice the '0x'
+        new BN(Buffer.from(x[0].slice(2), 'hex')),
+        new BN(Buffer.from(x[1].slice(2), 'hex'))
+      ];
+    })
+    .filter(x => x[0].cmp(bnZero) !== 0 && x[1].cmp(bnZero) !== 0);
+
+  const ringSignature = [
+    strTo64BN(c0),
+    s.map(x => strTo64BN(x)),
+    [
+      strTo64BN(keyImage[0]),
+      strTo64BN(keyImage[1])
+    ]
+  ];
+
+  const validRingSig = bn128.ringVerify(
+    msgBuf,
+    publicKeysBN,
+    ringSignature
+  );
+
+  if (!validRingSig) {
+    console.log(`Invalid Ring Signature: ${JSON.stringify(postParams)}`);
+    res
+      .status(400)
+      .send({
+        errorMessage: 'Invalid Ring Signature',
+        txHash: null
+      });
+    return;
+  }
+
+  // Convert to bytecode to estimate GAS
   let dataBytecode;
   try {
     dataBytecode = heiswapInstance
@@ -98,6 +184,7 @@ app.post('/', asyncHandler(async (req, res) => {
     return;
   }
 
+  // Passes in-built checks, time to estimate GAS
   let gas;
   try {
     // If estimating the gas throws an error
