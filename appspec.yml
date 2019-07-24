@@ -6,10 +6,10 @@ files:
 
 hooks:
   ApplicationStart:
-    - location: PROJECT_ROOT=/home/ubuntu/heiswap-relayer scripts/start_relayer.sh
+    - location: scripts/start_relayer.sh
       timeout: 300
       runas: root
   ApplicationStop:
-    - location: PROJECT_ROOT=/home/ubuntu/heiswap-relayer scripts/stop_relayer.sh
+    - location: scripts/stop_relayer.sh
       timeout: 300
       runas: root

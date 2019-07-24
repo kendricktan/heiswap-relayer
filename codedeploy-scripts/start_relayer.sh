@@ -2,7 +2,7 @@
 
 set -e
 
-cd $PROJECT_ROOT || .
+cd /home/ubuntu/heiswap-relayer
 
 pwd
 
