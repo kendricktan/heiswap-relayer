@@ -9,6 +9,9 @@ node_js:
 env:
   - CI=true
 
+install:
+  - echo "Skipped"
+
 cache:
   directories:
     - node_modules
