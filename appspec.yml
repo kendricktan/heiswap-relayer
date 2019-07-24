@@ -1,0 +1,14 @@
+version: 0.0
+os: linux
+files:
+  - source: ./
+    destination: /home/ubuntu/heiswap-relayer
+hooks:
+  ApplicationStart:
+    - location: scripts/start_relayer_with_loadbalancer.sh
+      timeout: 300
+      runas: root
+  ApplicationStop:
+    - location: scripts/stop_relayer.sh
+      timeout: 300
+      runas: root
