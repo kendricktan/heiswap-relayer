@@ -6,4 +6,4 @@ cd /home/ubuntu/heiswap-relayer
 
 pwd
 
-docker-compose up --build -d
+docker-compose up --build --scale relayer=2 -d
