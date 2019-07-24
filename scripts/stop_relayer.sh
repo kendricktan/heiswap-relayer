@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
 set -e
+
+cd $PROJECT_ROOT || .
+
 pwd
-docker-compose -f ../docker-compose.yml down
+
+docker-compose down
