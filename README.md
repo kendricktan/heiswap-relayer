@@ -1,6 +1,14 @@
 # heiswap-relayer
 Heiswap Relayer for gasless withdrawals
 
+---
+
+| Branch | Status | URL |
+|---|---|---|
+|Master|![](https://travis-ci.org/kendricktan/heiswap-relayer.svg?branch=master)|https://relayer.heiswap.exchange|
+
+---
+
 # Dependencies
 ```
 sudo apt-get update -y
