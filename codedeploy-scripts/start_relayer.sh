@@ -6,6 +6,4 @@ cd /home/ubuntu/heiswap-relayer
 
 pwd
 
-docker-compose run -e INFURA_PROJECT_ID=$INFURA_PROJECT_ID -e ETH_SK=$ETH_SK relayer --build -d
-
-exit 0
+docker-compose up --build -d

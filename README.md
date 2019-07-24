@@ -9,7 +9,23 @@ Heiswap Relayer for gasless withdrawals
 
 ---
 
-# Dependencies
+# Usage
+Send a payload to https://relayer.heiswap.exchange (or whatever URL you've deployed it to) with the following structure:
+```javascript
+{
+    "message": string,
+    "signedMessage": string,
+    "receiver": address, // ethereum address
+    "ethAmount": number,
+    "ringIdx": number,
+    "c0": string,
+    "keyImage": (string, string),
+    "s": Array<string>
+}
+```
+
+# DIY (Deploy-it-yourself)
+## Dependencies
 ```
 sudo apt-get update -y
 sudo apt install docker.io -y
@@ -20,12 +36,11 @@ sudo groupadd docker
 sudo usermod -aG docker $USER
 
 # Now relogin
-
 sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
-# Running the relayer
+## Running the relayer
 1. Clone the project and cd into it's root directory
 ```
 git clone git@github.com:kendricktan/heiswap-relayer.git
@@ -45,13 +60,13 @@ SITES: '*.yourdomain.com=yourapp:3000'
 
 3. Choose deployment method
 
-## SSL Enabled Load Balancer + multiple relayers
+### SSL Enabled Load Balancer (need custom domain) + multiple relayer backend
 ```bash
 # Change  relayer=2 to how many instances you want to run
 docker-compose up --build --scale relayer=2 -d
 ```
 
-## Single relayer (runs on port 3000)
+### Single relayer (runs on port 3000)
 ```
 docker build -t heiswap-relayer .
 docker run -e INFURA_PROJECT_ID=<> -e ETH_SK=<> heiswap-relayer
