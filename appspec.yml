@@ -10,6 +10,6 @@ hooks:
       timeout: 300
       runas: root
   ApplicationStop:
-    - location: codedeploy-scripts/start_relayer.sh
+    - location: codedeploy-scripts/stop_relayer.sh
       timeout: 300
       runas: root
