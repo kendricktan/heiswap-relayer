@@ -12,6 +12,9 @@ env:
 install:
   - echo "Skipped"
 
+cache:
+  npm: false
+
 deploy:
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY
